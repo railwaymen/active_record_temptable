@@ -1,0 +1,6 @@
+postgres:
+  adapter: postgresql
+  database: active_record_temptable_test
+sqlite:
+  adapter: sqlite3
+  database: ":memory:"

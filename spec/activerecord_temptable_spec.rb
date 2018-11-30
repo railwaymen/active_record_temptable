@@ -1,7 +1,35 @@
 # frozen_string_literal: true
+require 'fixtures/models'
 
 RSpec.describe ActiveRecordTemptable do
-  it "has a version number" do
-    expect(ActiveRecordTemptable::VERSION).not_to be nil
+  CONFIG.each do |database, config|
+    context database do
+      include_examples 'queries', config
+    end
+  end
+
+  describe 'creating table' do
+    before(:all) do
+      ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
+      load File.join(__dir__, 'fixtures', 'schema.rb')
+    end
+
+    it 'creates and drops temp table' do
+      expect(ActiveRecord::Base.connection).to receive(:execute).with(/CREATE TEMP(ORARY)? TABLE/i)
+      expect(ActiveRecord::Base.connection).to receive(:execute).with(/DROP TABLE IF EXISTS/i)
+      begin
+        described_class.with_temptable(User.all, []) { raise StandardError.new('Raised error') }
+      rescue
+      end
+    end
+
+    it 'creates indexes' do
+      args = [:id, [:email, unique: true], [[:id, :email], unique: true]]
+      tablename = 'test_temp_table'
+      expect(ActiveRecord::Base.connection).to receive(:add_index).with(tablename, args[0], {})
+      expect(ActiveRecord::Base.connection).to receive(:add_index).with(tablename, args[1][0], args[1][1])
+      expect(ActiveRecord::Base.connection).to receive(:add_index).with(tablename, args[2][0], args[2][1])
+      described_class.with_temptable(User.all, args, tablename) {}
+    end
   end
 end
