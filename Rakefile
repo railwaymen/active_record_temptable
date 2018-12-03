@@ -8,9 +8,16 @@ RSpec::Core::RakeTask.new(:spec)
 
 task :default => :spec
 
-task create_dbs: %i[create_pg]
+task create_dbs: %w[pg:build mysql:build]
 
-task :create_pg do
-  %x( createdb -E UTF8 #{CONFIG['postgres']['database']} )
+namespace :pg do
+  task :build do
+    %x( createdb -E UTF8 #{CONFIG['postgres']['database']} )
+  end
 end
 
+namespace :mysql do
+  task :build do
+    %x( mysql -e "create DATABASE #{CONFIG["mysql"]["database"]} DEFAULT CHARACTER SET utf8mb4" )
+  end
+end

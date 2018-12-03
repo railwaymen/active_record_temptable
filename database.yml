@@ -4,3 +4,6 @@ postgres:
 sqlite:
   adapter: sqlite3
   database: ":memory:"
+mysql:
+  adapter: mysql2
+  database: active_record_temptable_test
