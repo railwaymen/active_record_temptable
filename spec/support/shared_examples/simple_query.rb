@@ -14,6 +14,7 @@ RSpec.shared_examples "queries" do |db_config|
     @first_user = User.create(email: "lorem")
     @first_user_microposts = create_microposts[@first_user]
     @second_user = User.create(email: "ipsum")
+    Relationship.create(follower: @first_user, followed: @second_user)
     @second_user_microposts = create_microposts[@second_user]
     @third_user = User.create(email: "dolor")
     @third_user_microposts = create_microposts[@third_user]
@@ -26,9 +27,9 @@ RSpec.shared_examples "queries" do |db_config|
 
     ActiveRecordTemptable.with_temptable(@first_user.feed) do |table|
       all_records = table.to_a
-      group_records = table.group(:content).count.to_h
+      group_records = table.group(:user_id).count
     end
     expect(all_records).to eq @first_user.feed.to_a
-    expect(group_records).to eq @first_user.feed.group(:content).count
+    expect(group_records).to eq @first_user.feed.group(:user_id).count
   end
 end
