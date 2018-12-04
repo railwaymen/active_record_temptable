@@ -1,22 +1,24 @@
 # frozen_string_literal: true
 
-require "active_record_temptable/version"
+require 'active_record_temptable/version'
 require 'active_record'
 
 module ActiveRecordTemptable
   extend self
 
-  def with_temptable(relation, indexes = [], table_name='activerecord_temptable_records')
+  DEFAULT_TABLE_NAME = 'activerecord_temptable_records'.freeze
+
+  def with_temptable(relation, indexes = [], table_name = DEFAULT_TABLE_NAME)
     ActiveRecord::Base.connection_pool.with_connection do |connection|
       connection.transaction do
-      begin
-        create_table(connection, relation, table_name)
-        create_indexes(connection, table_name, indexes) if indexes.any?
-        klass = relation.klass
-        yield klass.unscoped.from("#{table_name} AS #{klass.table_name}") if block_given?
-      ensure
-        drop_table(connection, table_name)
-      end
+        begin
+          create_table(connection, relation, table_name)
+          create_indexes(connection, table_name, indexes) if indexes.any?
+          klass = relation.klass
+          yield klass.unscoped.from("#{table_name} AS #{klass.table_name}") if block_given?
+        ensure
+          drop_table(connection, table_name)
+        end
       end
     end
   end
