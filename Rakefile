@@ -18,6 +18,6 @@ end
 
 namespace :mysql do
   task :build do
-    %x( mysql -e "create DATABASE #{CONFIG["mysql"]["database"]} DEFAULT CHARACTER SET utf8mb4" )
+    %x( mysql -e "create DATABASE #{CONFIG["mysql"]["database"]}" )
   end
 end
