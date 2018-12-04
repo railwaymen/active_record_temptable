@@ -12,7 +12,7 @@ task create_dbs: %w[pg:build mysql:build]
 
 namespace :pg do
   task :build do
-    %x( createdb -E UTF8 #{CONFIG['postgres']['database']} )
+    %x( createdb -U #{CONFIG['postgres']['user']} -E UTF8 #{CONFIG['postgres']['database']} )
   end
 end
 
