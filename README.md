@@ -42,3 +42,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/railwaymen/active_record_temptable.
+
+
+## Code Status
+[![Build Status](https://travis-ci.com/railwaymen/active_record_temptable.svg?branch=master)](https://travis-ci.com/railwaymen/active_record_temptable)
