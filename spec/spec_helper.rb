@@ -1,5 +1,6 @@
 require "bundler/setup"
 require "active_record_temptable"
+require "yaml"
 
 CONFIG = YAML::load(File.open(File.join(__dir__, '..', 'database.yml')))
 
