@@ -25,7 +25,7 @@ RSpec.shared_examples "queries" do |db_config|
     all_records = []
     group_records = {}
 
-    ActiveRecordTemptable.with_temptable(@first_user.feed) do |table|
+    ActiveRecordTemptable.with_temptable(@first_user.feed, [:user_id]) do |table|
       all_records = table.to_a
       group_records = table.group(:user_id).count
     end
